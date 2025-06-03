@@ -2,7 +2,7 @@
 READ THE FOLLOWING FIRST:
 
 This is a bug tracker, please only use it to report bugs
-within OctoPrint-GCodeSystemCommands.
+within OctoPrint-LiveGCodeControl.
 
 Do not seek support here ("I need help with ...", "I have a
 question ..."), that belongs on the community forum at 
@@ -15,11 +15,11 @@ https://feathub.com/VisualBoy/OctoPrint-LiveGCodeControl
 When reporting a bug do NOT delete ANY lines from the template.
 
 Make sure any bug you want to report is still present with the CURRENT
-OctoPrint-GCodeSystemCommands version.
+OctoPrint-LiveGCodeControl version.
 
 To summarize:
 Support:          https://community.octoprint.org
-Feature Requests: https://feathub.com/kantlivelong/OctoPrint-GCodeSystemCommands
+Feature Requests: https://feathub.com/VisualBoy/OctoPrint-LiveGCodeControl
 Bug Reports:      Here
 
 Thanks!
@@ -48,7 +48,7 @@ to also include a link to a file with which to reproduce the problem.
 
 #### What happened instead?
 
-#### Version of OctoPrint-GCodeSystemCommands
+#### Version of OctoPrint-LiveGCodeControl
 
 <!--
 Can be found in the lower left corner of the web interface. ALWAYS INCLUDE.
@@ -69,7 +69,7 @@ If applicable, always include if unsure.
 -->
 
 
-#### Link to octoprint.log with octoprnt.plugins.gcodesystemcommands set to DEBUG
+#### Link to octoprint.log with octoprint.plugins.livegcodecontrol set to DEBUG
 
 <!--
 On gist.github.com or pastebin.com. ALWAYS INCLUDE and never truncate.
