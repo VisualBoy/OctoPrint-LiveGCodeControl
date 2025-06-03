@@ -47,7 +47,5 @@ This rule will find any G-code line that is exactly `M106 S255` and change it to
 2.  Go to the **Plugin Manager**.
 3.  Click on **Get More...**.
 4.  Search for "LiveGCodeControl" and click **Install**.
-Alternatively, you can manually install by pasting the URL of this repository (`https://github.com/VisualBoy/OctoPrint-LiveGCodeControl`) into the "...from URL" field in the Plugin Manager.
+Alternatively, you can manually install by pasting the URL of this repository (`[https://github.com/VisualBoy/OctoPrint-LiveGCodeControl](https://github.com/VisualBoy/OctoPrint-LiveGCodeControl/releases/download/0.1.0/OctoPrint-LiveGCodeControl-0.1.0.zip)`) into the "...from URL" field in the Plugin Manager.
 
----
-*This README was generated and updated by an AI agent.*
