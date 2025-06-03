@@ -3,14 +3,14 @@ import setuptools
 
 ########################################################################################################################
 
-plugin_identifier = "gcodesystemcommands"
-plugin_package = "octoprint_%s" % plugin_identifier
-plugin_name = "OctoPrint-GCodeSystemCommands"
-plugin_version = "1.0.1"
-plugin_description = "Define G-Code commands that execute local system commands."
-plugin_author = "Shawn Bruce"
-plugin_author_email = "kantlivelong@gmail.com"
-plugin_url = "https://github.com/kantlivelong/OctoPrint-GCodeSystemCommands"
+plugin_identifier = "livegcodecontrol"
+plugin_package = "octoprint_livegcodecontrol"
+plugin_name = "OctoPrint-LiveGCodeControl"
+plugin_version = "0.1.0"
+plugin_description = "A plugin for real-time G-code stream manipulation based on user-defined rules."
+plugin_author = "GlitchLab.xyz"
+plugin_author_email = "contact@glitchlab.xyz"
+plugin_url = "https://github.com/VisualBoy/OctoPrint-LiveGCodeControl"
 plugin_license = "AGPLv3"
 plugin_additional_data = []
 
@@ -46,15 +46,15 @@ def params():
 	packages = [plugin_package]
 
 	# we might have additional data files in sub folders that need to be installed too
-	package_data = {plugin_package: package_data_dirs(plugin_package, ['static', 'templates', 'translations'] + plugin_additional_data)}
+	package_data = {plugin_package: package_data_dirs(plugin_package, ['static', 'templates'])}
 	include_package_data = True
 
 	# If you have any package data that needs to be accessible on the file system, such as templates or static assets
 	# this plugin is not zip_safe.
 	zip_safe = False
 
-	# Read the requirements from our requirements.txt file
-	install_requires = open("requirements.txt").read().split("\n")
+	# No specific requirements for now
+	install_requires = []
 
 	# Hook the plugin into the "octoprint.plugin" entry point, mapping the plugin_identifier to the plugin_package.
 	# That way OctoPrint will be able to find the plugin and load it.
