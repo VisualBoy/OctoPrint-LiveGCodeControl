@@ -1,7 +1,7 @@
 # OctoPrint-LiveGCodeControl
 
 **Author:** GlitchLab.xyz
-**License:** AGPLv3
+**License:** MIT
 
 ## Objective
 OctoPrint-LiveGCodeControl is an OctoPrint plugin that provides users with powerful real-time G-code stream manipulation capabilities. It allows you to define rules that monitor outgoing G-code commands and automatically intervene by modifying, skipping, or injecting new G-code commands just before they are sent to the printer.
