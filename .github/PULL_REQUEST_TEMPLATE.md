@@ -1,4 +1,4 @@
-Thank you for your interest into contributing to OctoPrint-GCodeSystemCommands, it's highly appreciated!
+Thank you for your interest into contributing to OctoPrint-LiveGCodeControl, it's highly appreciated!
 
 Before submitting please make sure you have ticked all points on this checklist:
 
