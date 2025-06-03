@@ -1,16 +1,15 @@
 ---
 layout: plugin
 id: LiveGCodeControl
-title: Live G-Code Control
-# Alternatively, for title: OctoPrint-LiveGCodeControl
+title:  OctoPrint-LiveGCodeControl
 description: Allows real-time G-code stream manipulation by matching user-defined patterns (e.g., regex) against outgoing commands to conditionally modify, skip, or inject G-code.
 
 authors:
-- VisualBoy
+- GlitchLab.xyz
 
 license: MIT License
 
-date: 2024-07-25 # Updated to current date
+date: 2025-06-03 #
 
 homepage: https://github.com/VisualBoy/OctoPrint-LiveGCodeControl
 source: https://github.com/VisualBoy/OctoPrint-LiveGCodeControl
@@ -32,6 +31,8 @@ tags:
 - gcode manipulation
 - interface
 - tool
+- live
+- override
 
 screenshots:
 - url: /assets/img/plugins/LiveGCodeControl/screenshot1.png
