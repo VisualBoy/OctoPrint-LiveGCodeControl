@@ -10,7 +10,7 @@ https://community.octoprint.org
 All support related questions will be closed.
 
 Feature requests should be made at:
-https://feathub.com/kantlivelong/OctoPrint-GCodeSystemCommands
+https://feathub.com/VisualBoy/OctoPrint-LiveGCodeControl
 
 When reporting a bug do NOT delete ANY lines from the template.
 
