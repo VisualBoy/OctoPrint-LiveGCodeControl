@@ -135,12 +135,12 @@ class LiveGCodeControlPlugin(octoprint.plugin.SettingsPlugin,
 
                 # version check: github repository
                 type="github_release",
-                user="JulesGraus", # Update with your GitHub username
+                user="VisualBoy", # Update with your GitHub username
                 repo="OctoPrint-LiveGCodeControl",
                 current=self._plugin_version,
 
                 # update method: pip
-                pip="https://github.com/JulesGraus/OctoPrint-LiveGCodeControl/archive/{target_version}.zip"
+                pip="https://github.com/VisualBoy/OctoPrint-LiveGCodeControl/archive/{target_version}.zip"
             )
         )
 
