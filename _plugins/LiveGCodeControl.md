@@ -1,7 +1,7 @@
 ---
 layout: plugin
 id: LiveGCodeControl
-title:  OctoPrint-LiveGCodeControl
+title:  Live G-Code Control
 description: Allows real-time G-code stream manipulation by matching user-defined patterns (e.g., regex) against outgoing commands to conditionally modify, skip, or inject G-code.
 
 authors:
@@ -69,30 +69,30 @@ compatibility:
 #  - free-tier  # if your plugin has a free tier
 ---
 
-## OctoPrint-LiveGCodeControl
+## 🔧 OctoPrint-LiveGCodeControl
 
-**Live G-Code Control** is an OctoPrint plugin designed to give you fine-grained, real-time control over the G-code stream sent to your 3D printer.
+**Live G-Code Control** is an 🐙 **OctoPrint** plugin designed to provide fine-grained, real-time control over the G-code stream sent to your 3D printer.
 
-### Features
+### ✨ Features
 
-Users can define a set of rules, each consisting of a **pattern (regular expression)** and an **action**. As each G-code command is being processed to be sent to the printer, this plugin matches it against your defined patterns. If a pattern matches, the plugin can perform one of the following actions:
+Users can define a set of rules, each consisting of a **pattern (regular expression)** and an **action**. As each G-code command is processed, the plugin matches it against your defined patterns. If a pattern matches, the plugin can perform one of the following actions:
 
-* **Modify:** Alter the current G-code command (e.g., change a parameter's value).
-* **Skip/Suppress:** Prevent the current G-code command from being sent.
-* **Inject Before:** Insert one or more custom G-code commands immediately before the matched command.
-* **Inject After:** Insert one or more custom G-code commands immediately after the matched command (achieved by returning a list of commands including the original and new ones in the desired order from the G-code queuing hook).
-* **Replace:** Substitute the current G-code command with one or more custom G-code commands.
+- 🔄 **Modify:** Alter the current G-code command (e.g., change a parameter's value).
+- 🚫 **Skip/Suppress:** Prevent the current G-code command from being sent.
+- ➕ **Inject Before:** Insert custom G-code commands immediately before the matched command.
+- ➕ **Inject After:** Insert custom G-code commands immediately after the matched command.
+- 🔁 **Replace:** Substitute the current G-code command with custom G-code commands.
 
 This enables dynamic and conditional manipulation of the G-code stream based on its content, including slicer-generated comments (e.g., `;TYPE:Bridge`, `;LAYER_CHANGE`).
 
-### Example Use Cases
+### 🧪 Example Use Cases
 
-* **Dynamic Fan Control:** Automatically set fan speed to 100% when a line containing `;TYPE:Bridge` is detected, and revert to a lower speed when the bridge section is complete (may require careful rule design or state management for complex cases).
-* **Conditional G-code Injection:** Inject custom G-code commands before or after specific standard commands (e.g., add a custom nozzle wipe routine before `M600` filament change).
-* **Command Remapping/Filtering:** Change or filter out specific G-code commands on the fly.
-* **Experimentation:** Test G-code variations or inject diagnostic commands without re-slicing your model.
+- 🌬️ **Dynamic Fan Control:** Automatically set fan speed to 100% when a line containing `;TYPE:Bridge` is detected, and revert to a lower speed when the bridge section is complete.
+- 🧼 **Conditional G-code Injection:** Inject custom G-code commands before or after specific standard commands (e.g., add a custom nozzle wipe routine before `M600` filament change).
+- 🔄 **Command Remapping/Filtering:** Change or filter out specific G-code commands on the fly.
+- 🧪 **Experimentation:** Test G-code variations or inject diagnostic commands without re-slicing your model.
 
-### Configuration
+### ⚙️ Configuration
 
 The plugin provides a settings interface within OctoPrint where you can:
 * Create, edit, and delete rules.
@@ -102,12 +102,12 @@ The plugin provides a settings interface within OctoPrint where you can:
 * Enable or disable individual rules.
 * Control the order of rule evaluation.
 
-It is recommended to have a basic understanding of G-code and regular expressions to use this plugin effectively. Test rules in a safe environment before relying on them for critical prints.
+> ⚠️ It is recommended to have a basic understanding of G-code and regular expressions to use this plugin effectively. Test rules in a safe environment before relying on them for critical prints.
 
-### Important Notes
+### 📌 Important Notes
 
-* This plugin works by intercepting G-code commands via OctoPrint's `octoprint.comm.protocol.gcode.queuing` hook. This allows for robust modification of the command stream before it is sent to the printer.
-* While powerful, misconfiguration of rules could lead to unexpected printer behavior. Please use with caution and test your rules thoroughly.
-* The effectiveness of matching comments depends on your slicer generating those comments in the G-code file.
-* This plugin adds a new tab to the OctoPrint interface for managing rules. Screenshots provided showcase this interface.
+* 🧩 This plugin works by intercepting G-code commands via OctoPrint's `octoprint.comm.protocol.gcode.queuing` hook. This allows for robust modification of the command stream before it is sent to the printer.
+* ⚠️  While powerful, misconfiguration of rules could lead to unexpected printer behavior. Please use with caution and test your rules thoroughly.
+* ⚠️  The effectiveness of matching comments depends on your slicer generating those comments in the G-code file.
+* ➕  This plugin adds a new tab to the OctoPrint interface for managing rules. Screenshots provided showcase this interface.
 ```
