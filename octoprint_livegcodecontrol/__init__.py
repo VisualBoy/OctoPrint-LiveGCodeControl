@@ -17,8 +17,6 @@ class LedWorker(threading.Thread):
         self.running = True
         self.paused = False
 
-        self._lock = threading.Lock()
-
         # Configuration
         self.colors = ["#FF0000", "#0000FF"]
         self.mode = "spatial_wave"
@@ -26,16 +24,14 @@ class LedWorker(threading.Thread):
 
         # Internal State
         self.led_count = 30
-        self.last_sent_commands = None
 
     def update_config(self, payload):
-        with self._lock:
-            if "colors" in payload:
-                self.colors = payload["colors"]
-            if "mode" in payload:
-                self.mode = payload["mode"]
-            if "speed" in payload:
-                self.speed = payload["speed"]
+        if "colors" in payload:
+            self.colors = payload["colors"]
+        if "mode" in payload:
+            self.mode = payload["mode"]
+        if "speed" in payload:
+            self.speed = payload["speed"]
         self._logger.info(f"LedWorker config updated: {payload}")
 
     def run(self):
@@ -62,16 +58,9 @@ class LedWorker(threading.Thread):
                 time.sleep(1)
 
     def process_frame(self, is_printing):
-        # Snapshot state with lock
-        with self._lock:
-            mode = self.mode
-            colors = list(self.colors)
-            speed = self.speed
-            led_count = self.led_count
-
         # Bandwidth Safety / Fallback logic
-        current_mode = mode
-        if is_printing and mode in ["spatial_wave"]: # Add other spatial modes here
+        current_mode = self.mode
+        if is_printing and self.mode in ["spatial_wave"]: # Add other spatial modes here
             current_mode = "solid" # Downgrade to global fade/solid
 
         commands = []
@@ -79,7 +68,7 @@ class LedWorker(threading.Thread):
         if current_mode == "solid":
             # Global Fade (Single M150)
             # Assuming first color is primary
-            color = colors[0] if colors else "#FFFFFF"
+            color = self.colors[0] if self.colors else "#FFFFFF"
             r, g, b = self.hex_to_rgb(color)
             commands.append(f"M150 R{r} U{g} B{b}")
 
@@ -87,21 +76,17 @@ class LedWorker(threading.Thread):
             # Multiple M150 commands
             # Example wave effect
             t = time.time()
-            for i in range(led_count):
-                phase = (t / (20000.0 / (speed or 1))) + (i / 5.0)
+            for i in range(self.led_count):
+                phase = (t / (20000.0 / (self.speed or 1))) + (i / 5.0)
                 r = int(math.sin(phase) * 127 + 128)
                 b = int(math.cos(phase) * 127 + 128)
                 commands.append(f"M150 I{i} R{r} U0 B{b}")
 
-        # Inject G-code with deduplication
+        # Inject G-code
         if commands:
-             # Check if commands are identical to last sent
-             if commands != self.last_sent_commands:
-                 self._printer.commands(commands, tags=set(["suppress_log"]))
-                 self.last_sent_commands = commands
-             else:
-                 # Optional: Log debug or do nothing
-                 pass
+             # In a real scenario, you might batch these or send individually
+             # OctoPrint's send_cmd doesn't support lists for single command, but self._printer.commands does
+             self._printer.commands(commands, tags=set(["suppress_log"]))
 
     def hex_to_rgb(self, hex_val):
         hex_val = hex_val.lstrip('#')

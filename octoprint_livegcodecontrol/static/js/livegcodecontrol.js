@@ -34,6 +34,7 @@ $(function() {
 
             // Send configuration to backend
             var payload = {
+                command: "update_led_config",
                 payload: self.neofluxController.getConfigPayload()
             };
 
@@ -165,6 +166,12 @@ $(function() {
     OCTOPRINT_VIEWMODELS.push({
         construct: LiveGCodeControlViewModel,
         dependencies: ["settingsViewModel"],
-        elements: ["#settings_plugin_livegcodecontrol", "#neoflux-container"]
+        elements: ["#settings_plugin_livegcodecontrol", "#neoflux-container"],
+        onStartup: function() {
+             // Initialize NeoFlux Controller
+             if (window.NeoFluxController) {
+                this.neofluxController = new window.NeoFluxController("neoflux-canvas");
+             }
+        }
     });
 });
