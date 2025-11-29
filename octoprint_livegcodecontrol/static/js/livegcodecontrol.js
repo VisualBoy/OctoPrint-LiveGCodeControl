@@ -18,6 +18,35 @@ $(function() {
             return self.editingRule() ? "Update Rule" : "Add Rule";
         });
 
+        // --- NEOFLUX Implementation ---
+        self.neofluxController = null;
+        self.neofluxMode = ko.observable("spatial_wave");
+        self.neofluxSpeed = ko.observable(150);
+
+        self.applyNeoFluxConfig = function() {
+            if (!self.neofluxController) return;
+
+            // Update local controller state
+            self.neofluxController.updateConfig({
+                mode: self.neofluxMode(),
+                speed: parseInt(self.neofluxSpeed())
+            });
+
+            // Send configuration to backend
+            var payload = {
+                payload: self.neofluxController.getConfigPayload()
+            };
+
+            OctoPrint.simpleApiCommand("livegcodecontrol", "update_led_config", payload)
+                .done(function(response) {
+                    console.log("NEOFLUX config updated:", response);
+                })
+                .fail(function(response) {
+                    console.error("Failed to update NEOFLUX config:", response);
+                });
+        };
+        // ------------------------------
+
         // --- Helper function to create a new rule object ---
         function createRule(enabled, pattern, actionType, actionGcode) {
             return {
@@ -85,6 +114,15 @@ $(function() {
         };
 
         // --- OctoPrint Settings Plugin Hooks ---
+        self.onAfterBinding = function() {
+             // Initialize NeoFlux Controller (Moved from onStartup for DOM safety)
+             if (window.NeoFluxController && document.getElementById("neoflux-canvas")) {
+                this.neofluxController = new window.NeoFluxController("neoflux-canvas");
+             } else {
+                 console.warn("NeoFluxController or Canvas element missing.");
+             }
+        };
+
         self.onBeforeBinding = function() {
             // Load existing rules from settings
             var savedRulesData = self.settingsViewModel.settings.plugins.livegcodecontrol.rules();
@@ -127,6 +165,6 @@ $(function() {
     OCTOPRINT_VIEWMODELS.push({
         construct: LiveGCodeControlViewModel,
         dependencies: ["settingsViewModel"],
-        elements: ["#settings_plugin_livegcodecontrol"]
+        elements: ["#settings_plugin_livegcodecontrol", "#neoflux-container"]
     });
 });

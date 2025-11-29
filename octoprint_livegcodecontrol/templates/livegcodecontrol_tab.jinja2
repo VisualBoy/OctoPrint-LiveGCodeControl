@@ -1,0 +1,25 @@
+<div id="neoflux-container">
+    <h2>NEOFLUX LED CONTROLLER</h2>
+    <div class="neoflux-control-panel">
+        <div class="neoflux-preview">
+            <h3>Preview</h3>
+            <canvas id="neoflux-canvas" width="600" height="100"></canvas>
+        </div>
+        <div class="neoflux-controls">
+            <h3>Configuration</h3>
+            <div class="neoflux-input-group">
+                <label>Mode</label>
+                <select id="neoflux-mode" class="neoflux-input" data-bind="value: neofluxMode">
+                    <option value="spatial_wave">Spatial Wave</option>
+                    <option value="solid">Solid Color</option>
+                </select>
+            </div>
+            <div class="neoflux-input-group">
+                <label>Speed</label>
+                <input type="number" class="neoflux-input" data-bind="value: neofluxSpeed">
+            </div>
+            <!-- More controls can be added here -->
+            <button class="neoflux-btn" data-bind="click: applyNeoFluxConfig">Apply Configuration</button>
+        </div>
+    </div>
+</div>
