@@ -18,6 +18,36 @@ $(function() {
             return self.editingRule() ? "Update Rule" : "Add Rule";
         });
 
+        // --- NEOFLUX Implementation ---
+        self.neofluxController = null;
+        self.neofluxMode = ko.observable("spatial_wave");
+        self.neofluxSpeed = ko.observable(150);
+
+        self.applyNeoFluxConfig = function() {
+            if (!self.neofluxController) return;
+
+            // Update local controller state
+            self.neofluxController.updateConfig({
+                mode: self.neofluxMode(),
+                speed: parseInt(self.neofluxSpeed())
+            });
+
+            // Send configuration to backend
+            var payload = {
+                command: "update_led_config",
+                payload: self.neofluxController.getConfigPayload()
+            };
+
+            OctoPrint.simpleApiCommand("livegcodecontrol", "update_led_config", payload)
+                .done(function(response) {
+                    console.log("NEOFLUX config updated:", response);
+                })
+                .fail(function(response) {
+                    console.error("Failed to update NEOFLUX config:", response);
+                });
+        };
+        // ------------------------------
+
         // --- Helper function to create a new rule object ---
         function createRule(enabled, pattern, actionType, actionGcode) {
             return {
@@ -127,6 +157,12 @@ $(function() {
     OCTOPRINT_VIEWMODELS.push({
         construct: LiveGCodeControlViewModel,
         dependencies: ["settingsViewModel"],
-        elements: ["#settings_plugin_livegcodecontrol"]
+        elements: ["#settings_plugin_livegcodecontrol", "#neoflux-container"],
+        onStartup: function() {
+             // Initialize NeoFlux Controller
+             if (window.NeoFluxController) {
+                this.neofluxController = new window.NeoFluxController("neoflux-canvas");
+             }
+        }
     });
 });
