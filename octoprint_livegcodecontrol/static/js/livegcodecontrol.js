@@ -23,6 +23,87 @@ $(function() {
         self.neofluxMode = ko.observable("spatial_wave");
         self.neofluxSpeed = ko.observable(150);
 
+        self.neofluxPresets = ko.observableArray([]);
+        self.selectedPreset = ko.observable();
+
+        self.neofluxEvents = ko.observableArray([
+            "Startup", "PrintStarted", "PrintDone", "PrintFailed", "PrintPaused", "PrintResumed"
+        ]);
+        self.neofluxEventMappings = ko.observableArray([]); // {event: "PrintStarted", preset: ko.observable("CyberPunk")}
+
+        self.refreshPresets = function() {
+            OctoPrint.simpleApiGet("livegcodecontrol")
+                .done(function(response) {
+                    var presets = [];
+                    if (response.presets) {
+                        for (var name in response.presets) {
+                            presets.push({name: name, config: response.presets[name]});
+                        }
+                    }
+                    self.neofluxPresets(presets);
+                });
+        };
+
+        self.selectedPreset.subscribe(function(newPresetName) {
+            if (newPresetName) {
+                var preset = ko.utils.arrayFirst(self.neofluxPresets(), function(item) {
+                    return item.name === newPresetName;
+                });
+                if (preset) {
+                    self.neofluxMode(preset.config.mode);
+                    self.neofluxSpeed(preset.config.speed);
+                    if (self.neofluxController && preset.config.colors) {
+                         self.neofluxController.colors = preset.config.colors; // Update colors
+                    }
+                    // Update preview immediately
+                    if (self.neofluxController) {
+                        self.neofluxController.updateConfig({
+                            mode: self.neofluxMode(),
+                            speed: parseInt(self.neofluxSpeed())
+                        });
+                    }
+                }
+            }
+        });
+
+        self.savePreset = function() {
+            var name = prompt("Enter preset name:");
+            if (name) {
+                if (self.neofluxController) {
+                     // Ensure local controller state is up to date before grabbing config
+                     self.neofluxController.updateConfig({
+                        mode: self.neofluxMode(),
+                        speed: parseInt(self.neofluxSpeed())
+                     });
+                }
+
+                var config = self.neofluxController ? self.neofluxController.getConfigPayload() : {
+                    mode: self.neofluxMode(),
+                    speed: parseInt(self.neofluxSpeed()),
+                    colors: ["#FF0000", "#0000FF"] // Default fallback
+                };
+
+                OctoPrint.simpleApiCommand("livegcodecontrol", "save_preset", {
+                    name: name,
+                    config: config
+                }).done(function() {
+                    self.refreshPresets();
+                });
+            }
+        };
+
+        self.deletePreset = function() {
+            var name = self.selectedPreset();
+            if (name && confirm("Are you sure you want to delete preset '" + name + "'?")) {
+                OctoPrint.simpleApiCommand("livegcodecontrol", "delete_preset", {
+                    name: name
+                }).done(function() {
+                    self.refreshPresets();
+                    self.selectedPreset(undefined);
+                });
+            }
+        };
+
         self.applyNeoFluxConfig = function() {
             if (!self.neofluxController) return;
 
@@ -45,6 +126,21 @@ $(function() {
                 .fail(function(response) {
                     console.error("Failed to update NEOFLUX config:", response);
                 });
+        };
+
+        self.testEventMapping = function(mapping) {
+            var presetName = mapping.preset();
+            if (presetName) {
+                 var preset = ko.utils.arrayFirst(self.neofluxPresets(), function(item) {
+                    return item.name === presetName;
+                });
+                if (preset) {
+                    // Just apply it live
+                    OctoPrint.simpleApiCommand("livegcodecontrol", "update_led_config", {
+                        payload: preset.config
+                    });
+                }
+            }
         };
         // ------------------------------
 
@@ -135,12 +231,26 @@ $(function() {
                 });
                 self.rules(mappedRules);
             }
+
+            // NeoFlux Events
+            self.refreshPresets();
+            var savedEvents = self.settingsViewModel.settings.plugins.livegcodecontrol.neoflux_events();
+            var mappings = [];
+            ko.utils.arrayForEach(self.neofluxEvents(), function(evt) {
+                 var preset = savedEvents ? savedEvents[evt] : undefined;
+                 mappings.push({
+                     event: evt,
+                     preset: ko.observable(preset)
+                 });
+            });
+            self.neofluxEventMappings(mappings);
         };
 
         self.onSettingsShown = function() {
             // Could refresh data from server if necessary, but usually onBeforeBinding is enough for settings
             // Ensure editing state is clear when settings are reshown
             self.cancelEdit();
+            self.refreshPresets(); // Ensure presets are up to date in settings
         };
 
         self.onSettingsHidden = function() {
@@ -160,6 +270,15 @@ $(function() {
                 };
             });
             self.settingsViewModel.settings.plugins.livegcodecontrol.rules(rulesToSave);
+
+            // Save NeoFlux Events
+            var eventsToSave = {};
+            ko.utils.arrayForEach(self.neofluxEventMappings(), function(mapping) {
+                if (mapping.preset()) {
+                    eventsToSave[mapping.event] = mapping.preset();
+                }
+            });
+            self.settingsViewModel.settings.plugins.livegcodecontrol.neoflux_events(eventsToSave);
         };
     }
 
