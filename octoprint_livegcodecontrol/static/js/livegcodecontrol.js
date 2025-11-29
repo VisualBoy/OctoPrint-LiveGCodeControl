@@ -115,6 +115,15 @@ $(function() {
         };
 
         // --- OctoPrint Settings Plugin Hooks ---
+        self.onAfterBinding = function() {
+             // Initialize NeoFlux Controller (Moved from onStartup for DOM safety)
+             if (window.NeoFluxController && document.getElementById("neoflux-canvas")) {
+                this.neofluxController = new window.NeoFluxController("neoflux-canvas");
+             } else {
+                 console.warn("NeoFluxController or Canvas element missing.");
+             }
+        };
+
         self.onBeforeBinding = function() {
             // Load existing rules from settings
             var savedRulesData = self.settingsViewModel.settings.plugins.livegcodecontrol.rules();
