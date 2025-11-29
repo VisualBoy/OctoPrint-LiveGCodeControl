@@ -7,6 +7,9 @@ import re # Import the regular expression module
 import threading
 import time
 import math
+import flask
+import json
+import os
 
 class LedWorker(threading.Thread):
     def __init__(self, printer, logger):
@@ -100,7 +103,8 @@ class LedWorker(threading.Thread):
 class LiveGCodeControlPlugin(octoprint.plugin.SettingsPlugin,
                              octoprint.plugin.AssetPlugin,
                              octoprint.plugin.TemplatePlugin,
-                             octoprint.plugin.SimpleApiPlugin):
+                             octoprint.plugin.SimpleApiPlugin,
+                             octoprint.plugin.EventHandlerPlugin):
 
     def __init__(self):
         # Initialize the logger
@@ -117,21 +121,68 @@ class LiveGCodeControlPlugin(octoprint.plugin.SettingsPlugin,
 
     ##~~ SimpleApiPlugin mixin
 
+    def on_api_get(self, request):
+        return flask.jsonify(presets=self._settings.get(["neoflux_presets"]))
+
     def on_api_command(self, command, data):
         if command == "update_led_config":
             if self.led_worker:
                  self.led_worker.update_config(data.get('payload', {}))
 
+        elif command == "save_preset":
+            name = data.get("name")
+            config = data.get("config")
+            if name and config:
+                presets = self._settings.get(["neoflux_presets"])
+                presets[name] = config
+                self._settings.set(["neoflux_presets"], presets)
+                self._settings.save()
+                self._logger.info(f"Saved preset: {name}")
+
+        elif command == "delete_preset":
+            name = data.get("name")
+            if name:
+                presets = self._settings.get(["neoflux_presets"])
+                if name in presets:
+                    del presets[name]
+                    self._settings.set(["neoflux_presets"], presets)
+                    self._settings.save()
+                    self._logger.info(f"Deleted preset: {name}")
+
     def get_api_commands(self):
         return dict(
-            update_led_config=["payload"]
+            update_led_config=["payload"],
+            save_preset=["name", "config"],
+            delete_preset=["name"]
         )
+
+    def on_event(self, event, payload):
+        events_mapping = self._settings.get(["neoflux_events"])
+        if event in events_mapping:
+            preset_name = events_mapping[event]
+            presets = self._settings.get(["neoflux_presets"])
+            if preset_name in presets:
+                config = presets[preset_name]
+                if self.led_worker:
+                    self._logger.info(f"Applying preset '{preset_name}' for event '{event}'")
+                    self.led_worker.update_config(config)
 
     ##~~ SettingsPlugin mixin
 
     def get_settings_defaults(self):
+        presets = {}
+        try:
+            presets_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "presets.json")
+            if os.path.exists(presets_path):
+                with open(presets_path, "r") as f:
+                    presets = json.load(f)
+        except Exception as e:
+            self._logger.error(f"Error loading presets from file: {e}")
+
         return dict(
-            rules=[]  # Default empty list for rules
+            rules=[],  # Default empty list for rules
+            neoflux_presets=presets,
+            neoflux_events={}
         )
 
     def on_settings_initialized(self):

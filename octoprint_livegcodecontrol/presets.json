@@ -1,0 +1,27 @@
+{
+  "Printing": {
+    "mode": "solid",
+    "speed": 0,
+    "colors": ["#FFFFFF"]
+  },
+  "Done": {
+    "mode": "solid",
+    "speed": 0,
+    "colors": ["#00FF00"]
+  },
+  "Failed": {
+    "mode": "solid",
+    "speed": 0,
+    "colors": ["#FF0000"]
+  },
+  "Idle": {
+    "mode": "spatial_wave",
+    "speed": 150,
+    "colors": ["#FF00FF", "#0000FF"]
+  },
+  "Heating": {
+    "mode": "solid",
+    "speed": 0,
+    "colors": ["#FF8800"]
+  }
+}

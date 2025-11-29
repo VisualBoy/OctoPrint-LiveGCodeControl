@@ -8,6 +8,11 @@
         <div class="neoflux-controls">
             <h3>Configuration</h3>
             <div class="neoflux-input-group">
+                <label>Preset</label>
+                <select id="neoflux-preset" class="neoflux-input" data-bind="options: neofluxPresets, optionsText: 'name', optionsValue: 'name', value: selectedPreset, optionsCaption: 'Select a preset...'">
+                </select>
+            </div>
+            <div class="neoflux-input-group">
                 <label>Mode</label>
                 <select id="neoflux-mode" class="neoflux-input" data-bind="value: neofluxMode">
                     <option value="spatial_wave">Spatial Wave</option>
@@ -19,7 +24,11 @@
                 <input type="number" class="neoflux-input" data-bind="value: neofluxSpeed">
             </div>
             <!-- More controls can be added here -->
-            <button class="neoflux-btn" data-bind="click: applyNeoFluxConfig">Apply Configuration</button>
+            <div class="neoflux-button-group">
+                 <button class="neoflux-btn" data-bind="click: applyNeoFluxConfig">Activate Live</button>
+                 <button class="neoflux-btn secondary" data-bind="click: savePreset">Save as Preset</button>
+                 <button class="neoflux-btn btn-danger" data-bind="click: deletePreset, visible: selectedPreset" style="margin-left: 5px;">Delete</button>
+            </div>
         </div>
     </div>
 </div>
