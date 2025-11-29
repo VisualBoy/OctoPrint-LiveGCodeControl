@@ -1,0 +1,78 @@
+/* Neoflux Cyberpunk Styling */
+#neoflux-container {
+    background-color: #0d0d0d;
+    color: #00ffea;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 20px;
+    border: 2px solid #00ffea;
+    box-shadow: 0 0 15px #00ffea;
+}
+
+#neoflux-container h2 {
+    text-shadow: 0 0 10px #00ffea;
+    border-bottom: 1px solid #00ffea;
+    padding-bottom: 10px;
+}
+
+.neoflux-control-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.neoflux-preview {
+    flex: 1;
+    min-width: 300px;
+    border: 1px dashed #ff00ff;
+    padding: 10px;
+    background-color: #1a1a1a;
+}
+
+.neoflux-controls {
+    flex: 1;
+    min-width: 300px;
+}
+
+canvas#neoflux-canvas {
+    width: 100%;
+    height: auto;
+    background-color: #000;
+    box-shadow: 0 0 10px #ff00ff;
+}
+
+.neoflux-btn {
+    background-color: #000;
+    color: #ff00ff;
+    border: 1px solid #ff00ff;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.neoflux-btn:hover {
+    background-color: #ff00ff;
+    color: #000;
+    box-shadow: 0 0 15px #ff00ff;
+}
+
+.neoflux-input-group {
+    margin-bottom: 15px;
+}
+
+.neoflux-input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #00ffea;
+}
+
+.neoflux-input {
+    background-color: #222;
+    border: 1px solid #00ffea;
+    color: #fff;
+    padding: 8px;
+    width: 100%;
+}
