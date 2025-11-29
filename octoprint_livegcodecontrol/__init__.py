@@ -13,9 +13,16 @@ class LiveGCodeControlPlugin(octoprint.plugin.SettingsPlugin,
         # Initialize the logger
         self._logger = logging.getLogger("octoprint.plugins.livegcodecontrol")
         self._logger.info("LiveGCodeControlPlugin: Initializing...")
+        #
         self.active_rules = [] # Initialize active_rules
         self.last_matched_rule_pattern = None # Initialize last matched rule pattern
 
+    ## Template mixin
+    def get_template_configs(self):
+        return [
+            dict(type="settings", custom_bindings=True)
+        ]
+    
     ##~~ SettingsPlugin mixin
 
     def get_settings_defaults(self):
@@ -45,8 +52,8 @@ class LiveGCodeControlPlugin(octoprint.plugin.SettingsPlugin,
         # core UI here.
         return dict(
             js=["js/livegcodecontrol.js"],
-            css=["css/livegcodecontrol.css"],
-            less=["less/livegcodecontrol.less"]
+            #css=["css/livegcodecontrol.css"],
+            #less=["less/livegcodecontrol.less"]
         )
 
     ##~~ G-code queuing hook

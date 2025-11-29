@@ -61,6 +61,9 @@ $(function() {
             self.newRuleActionType("modify"); // Reset to default action type
             self.newRuleActionGcode("");
             self.editingRule(null); // Exit edit mode
+            
+             // Save settings immediately after adding rule
+             self.onSettingsSave();
         };
 
         self.removeRule = function(rule) {
@@ -121,6 +124,7 @@ $(function() {
                 };
             });
             self.settingsViewModel.settings.plugins.livegcodecontrol.rules(rulesToSave);
+            self.settingsViewModel.saveSettings();
         };
     }
 
